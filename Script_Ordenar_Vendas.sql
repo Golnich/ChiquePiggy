@@ -1,0 +1,1 @@
+select Id_Cliente,format(Data_Compra, 'dd/MM/yyyy') as Data_Compra, sum(Valor_Compra) as Valor from vendas group by Data_Compra, Id_Cliente order by Data_Compra desc
