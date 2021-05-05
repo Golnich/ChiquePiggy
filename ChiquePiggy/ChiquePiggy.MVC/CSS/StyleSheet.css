@@ -1,0 +1,25 @@
+﻿body {
+	background-color: #9f9f9f;
+}
+
+
+h1 {
+	color: Blue;
+}
+
+div {
+	font-family: monospace;
+}
+
+
+table {
+	border: 1px solid black;
+	background-color: #f3f3f3;
+	text-align: center;
+}
+
+th {
+	background-color: #9d9d9d;
+	color: white;
+	text-align: center;
+}

@@ -1,0 +1,104 @@
+﻿@model ChiquePiggy.MVC.ViewModel.VendasViewModel
+@{
+    ViewBag.Title = "Vendas";
+}
+
+<div class="alert alert-info">
+    <div align="center">
+        <h2 class="panel-title">  <i>Central de Vendas </i></h2>
+    </div>
+</div>
+
+<body>
+    <div class="panel-body">
+        <fieldset>
+            <legend id="titulo1"> <strong>Cadastro de Vendas </strong></legend>
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="">
+                        Cód Cliente:
+                    </label>
+                    @Html.DropDownListFor(l => l.Id_Cliente, (IEnumerable<SelectListItem>)ViewBag.Clientes, "Selecione um cliente", new { @class = "form-control" })
+                </div>
+                <div class="col-md-3">
+                    <label class="">
+                        Valor da Compra:
+                    </label>
+                    @Html.TextBoxFor(l => l.DS_ValorCompra, new { @class = "form-control", @placeholder = "Valor da compra", @type = "number", @step = "0.01", @name = "quantity", @min = "0.01" })
+                </div>
+                <div class="col-md-3">
+                    <label>Data Inicio:</label>
+                    <input type="date" name="data" id="data" min="2000-01-01" class="form-control" required />
+                    <p><span style="color:#ff0000;"></span></p>
+
+                </div>
+                <br />
+                <div class="col-md-2">
+                    <button class="btn btn-warning" type="button" id="btnCadastrar">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                        Cadastrar
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-12" style="overflow-x:auto">
+                <div id="divResult">
+
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</body>
+
+
+@section Scripts{
+    <script>
+
+        $(document).ready(function () {
+            BuscarPontos();
+        });
+
+        function BuscarPontos() {
+            debugger;
+            $.ajax({
+                url: "../Caixa/BuscarPontos",
+                type: "POST",
+                success: function (dados) {
+                    $("#divResult").html(dados)
+                }
+               
+            });
+        }
+
+        $("#btnCadastrar").click(function () {
+
+            var model = {
+                Id_Cliente: $("#Id_Cliente").val(),
+                DS_ValorCompra: $("#DS_ValorCompra").val(),
+                Data_Compra: $("#data").val()
+            }
+            if (model.Id_Cliente == "" || model.DS_ValorCompra == "" || model.Data_Compra == "") {
+                alert("Verifique se todos os campos foram preenchidos corretamente!")
+            } else {
+                $.ajax({
+                    url: "../Caixa/CadastroVenda",
+                    type: "POST",
+                    data: model,
+                    success: function (dados) {
+                        debugger;
+                        if (dados.isSucess == true) {
+                            $("#Id_Cliente").val('')
+                            $("#DS_ValorCompra").val("")
+                            $("#data").val("")
+                           
+                        }
+                        if (dados.Verifica == false || dados.isSucess == false) {
+                            alert(dados.MensagemCallBack);
+                        }
+                        $("#divResult").html('')
+                        BuscarPontos();
+                    }
+                });
+            }
+        })
+    </script>
+}

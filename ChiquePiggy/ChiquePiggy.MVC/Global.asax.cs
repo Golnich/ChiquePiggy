@@ -1,4 +1,6 @@
-﻿using ChiquePiggy.Services;
+﻿using ChiquePiggy.MVC.AppService;
+using ChiquePiggy.MVC.ViewModel;
+using ChiquePiggy.Services;
 using ChiquePiggy.Services.Interfaces;
 using SimpleInjector;
 using SimpleInjector.Integration.Web;
@@ -30,6 +32,9 @@ namespace ChiquePiggy.MVC
             var container = new Container();
             container.Options.DefaultScopedLifestyle = new WebRequestLifestyle();
             container.Register<ICaixaService, CaixaService>(Lifestyle.Scoped);
+            container.Register<IClienteAppService, ClienteAppService>(Lifestyle.Scoped);
+            container.Register<IVendasAppService, VendasAppService>(Lifestyle.Scoped);
+            container.Register<IPonstosAppService, PontosAppService>(Lifestyle.Scoped);
             container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
             container.Verify();
             DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));

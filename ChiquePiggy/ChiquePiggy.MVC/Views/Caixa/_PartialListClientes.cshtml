@@ -1,0 +1,69 @@
+﻿@using ChiquePiggy.MVC.ViewModel;
+@{
+    var lstClientes = Model as List<ClienteViewModel>;
+}
+
+<hr />
+
+<table class="table table-bordered table-hover">
+
+    <thead>
+        <tr>
+            <th>Cód Cliente</th>
+            <th>Nome do Cliente</th>
+            <th>Botões</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @{
+            if (lstClientes != null)
+            {
+                if (lstClientes.Count > 0)
+                {
+                    foreach (var entidade in lstClientes)
+                    {
+
+                        <tr id="@entidade.Id_Cliente">
+                            <td>@entidade.Cod_Cliente</td>
+                            <td>@entidade.Nome_Cliente</td>
+                            <td>
+                                <button class="btn btn-xs btn-danger btnDeletar" title="Deletar">Deletar</button>
+                            </td>
+
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3"> Nenhum Registro Encontrado</td>
+                    </tr>
+                }
+
+
+            }
+        }
+    </tbody>
+
+</table>
+
+<script>
+    $(".btnDeletar").click(function () {
+        var model = {
+            Id_Cliente: $(this).closest("tr").attr("id"),
+        }
+        var confirmacao = confirm("Deseja realmente deletar esse cliente ?, todos os dados atrelados a ele serão excluidos")
+        if (confirmacao == true) {
+            $.ajax({
+                url: "../Caixa/DeletarCliente",
+                type: "POST",
+                data: model,
+                success: function (dados) {
+                    $("#btnPesquisar").click();
+
+                }
+            });
+        }
+    });
+</script>

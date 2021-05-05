@@ -1,0 +1,82 @@
+﻿@using ChiquePiggy.MVC.ViewModel;
+@{
+    var lstPontos = Model as List<VendasViewModel>;
+}
+
+<hr />
+
+<table class="table table-bordered table-hover">
+
+    <thead>
+        <tr>
+            <th>Nome do Cliente</th>
+            <th>Pontos</th>
+            <th>Botões</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            if (lstPontos != null)
+            {
+                if (lstPontos.Count > 0)
+                {
+                    foreach (var entidade in lstPontos)
+                    {
+                        if (entidade.Camisas >= 1)
+                        {
+                            <tr id="@entidade.Id_Cliente">
+                                <td>@entidade.Ds_Nome</td>
+                                <td>@entidade.DS_Pontos</td>
+
+                                <td>
+                                    <button class="btn btn-xs btn-success btnObter" title="Obter">Obter camisa</button>
+                                </td>
+                            </tr>
+                        }else
+                        {
+                            <tr id="@entidade.Id_Cliente">
+                                <td>@entidade.Ds_Nome</td>
+                                <td>@entidade.DS_Pontos</td>
+                                <td>
+                                    <button class="btn btn-xs btn-danger btnObter" title="Obter" disabled>Obter camisa</button>
+                                </td>
+                            </tr>
+                        }
+
+
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3"> Nenhum Registro Encontrado</td>
+                    </tr>
+                }
+
+
+            }
+        }
+
+    </tbody>
+
+</table>
+<script>
+    $(".btnObter").click(function () {
+        var model = {
+            Id_Cliente: $(this).closest("tr").attr("id"),
+        }
+        var confirmacao = confirm("Deseja realmente trocar seus pontos ?")
+        if (confirmacao == true) {
+            $.ajax({
+                url: "../Caixa/ObterPontos",
+                type: "POST",
+                data: model,
+                success: function (dados) {
+                    BuscarPontos();
+
+                }
+            });
+        }
+    });
+
+</script>

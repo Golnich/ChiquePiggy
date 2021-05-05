@@ -1,7 +1,76 @@
-﻿
+﻿@model ChiquePiggy.MVC.ViewModel.ClienteViewModel
 @{
     ViewBag.Title = "Inicio";
 }
 
-<h2>Seu saldo é @ViewBag.Saldo pontos</h2>
+<div class="alert alert-info">
+    <div align="center">
+        <h2 class="panel-title">  <i>Central de clientes </i></h2>
+    </div>
+</div>
+
+<body>
+    <div class="panel-body">
+        <fieldset>
+            <legend id="titulo1"> <strong>Filtros de Pesquisa </strong></legend>
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="">
+                        Cód Cliente:
+                    </label>
+                    @Html.TextBoxFor(l => l.Cod_Cliente, new { @class = "form-control", @placeholder = "Codigo do Cliente", @type = "number" })
+                </div>
+                <div class="col-md-4">
+                    <label class="">
+                        Nome do cliente:
+                    </label>
+                    @Html.TextBoxFor(l => l.Nome_Cliente, new { @class = "form-control", @placeholder = "Nome do cliente" })
+                </div>
+                <br />
+                <div class="col-md-4">
+                    <button class="btn btn-info" type="button" id="btnPesquisar">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                        Pesquisar
+                    </button>
+                    <button class="btn btn-warning" type="button" id="btnCadastrar">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                        Cadastrar
+                    </button>
+
+                </div>
+            </div>
+            <div class="col-md-12" style="overflow-x:auto">
+                <div id="divResult">
+
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</body>
+
+
+@section Scripts{
+    <script>
+
+        $("#btnPesquisar").click(function () {
+            var model = {
+                Cod_Cliente: $("#Cod_Cliente").val(),
+                Nome_Cliente: $("#Nome_Cliente").val()
+            }
+
+            $.ajax({
+                url: "../Caixa/PesquisaClientes",
+                type: "POST",
+                data: model,
+                success: function (dados) {
+                    $("#divResult").html(dados)
+                }
+            });
+        })
+
+        $("#btnCadastrar").click(function () {
+            window.location.href = "../Caixa/CadastroClientes";
+        })
+    </script>
+}
 

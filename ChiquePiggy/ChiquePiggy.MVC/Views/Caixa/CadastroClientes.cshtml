@@ -1,0 +1,79 @@
+﻿@model ChiquePiggy.MVC.ViewModel.ClienteViewModel
+@{
+    ViewBag.Title = "Cadastro de Clientes";
+}
+
+<div class="alert alert-info">
+    <div align="center">
+        <h2 class="panel-title"> <i>Cadastro de clientes </i></h2>
+    </div>
+</div>
+
+<div class="panel-body">
+    <fieldset>
+        <legend> <strong>Dados para Cadastro </strong></legend>
+
+        <div class="row">
+            <div class="col-md-4">
+                <label class="">
+                    Cód Cliente:
+                </label>
+                @Html.TextBoxFor(l => l.Cod_Cliente, new { @class = "form-control", @placeholder = "Nome do Cliente", @type = "number" })
+            </div>
+            <div class="col-md-4">
+                <label class="">
+                    Nome:
+                </label>
+                @Html.TextBoxFor(l => l.Nome_Cliente, new { @class = "form-control", @placeholder = "Nome do cliente" })
+            </div>
+            <br />
+
+            <div class="col-md-4">
+                <button class="btn  btn-success" type="button" id="btnInserir">
+                    <i class="fa fa-plus" aria-hidden="true"></i>  Inserir
+                </button>
+                <button type="button" id="btnVoltar" class="btn btn-danger" title="Voltar">
+                    <i class="ace-icon fa fa-arrow-left"></i>
+                    Voltar
+                </button>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+
+@section Scripts{
+    <script>
+        $("#btnInserir").click(function () {
+
+            var model = {
+                Cod_Cliente: $("#Cod_Cliente").val(),
+                Nome_Cliente: $("#Nome_Cliente").val()
+            }
+            if (model.Id_Cliente == "" || model.Nome_Cliente == "") {
+                alert("Verifique se todos os campos foram preenchidos corretamente!")
+            } else {
+                $.ajax({
+                    url: "../Caixa/CadastrarCliente",
+                    type: "POST",
+                    data: model,
+                    success: function (dados) {
+                        debugger;
+                        if (dados.IsSucess == true) {
+                            $("#Cod_Cliente").val("")
+                            $("#Nome_Cliente").val("")
+                        } else {
+
+                        }
+                        alert(dados.MensagemCallBack);
+
+                    }
+                });
+            }
+        })
+
+        $("#btnVoltar").click(function () {
+            window.location.href = "../Caixa/Inicio";
+        })
+    </script>
+}
