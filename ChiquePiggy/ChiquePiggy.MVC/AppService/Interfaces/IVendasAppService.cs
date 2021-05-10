@@ -9,8 +9,8 @@ namespace ChiquePiggy.MVC.AppService
 {
     public interface IVendasAppService
     {
-        IReadOnlyList<VendasViewModel> ListarVendas();
-        void CadastrarVendas(VendasViewModel parametros);
-        void DeletarVendas(VendasViewModel parametros);
+        IReadOnlyList<Vendas> ListarVendas();
+        void CadastrarVendas(Vendas parametros);
+        void DeletarVendas(Vendas parametros);
     }
 }

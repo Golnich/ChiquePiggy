@@ -9,8 +9,8 @@ namespace ChiquePiggy.MVC.AppService
 {
    public interface IClienteAppService
     {
-        IReadOnlyList<ClienteViewModel> ListarClientes();
-        void CadastrarClientes(ClienteViewModel parametros);
-        void DeletarCliente(ClienteViewModel parametros);
+        IReadOnlyList<Cliente> ListarClientes();
+        void CadastrarClientes(Cliente parametros);
+        void DeletarCliente(Cliente parametros);
     }
 }

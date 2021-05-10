@@ -16,44 +16,40 @@
     </thead>
     <tbody>
         @{
-            if (lstPontos != null)
+            if (lstPontos != null || lstPontos.Count > 0)
             {
-                if (lstPontos.Count > 0)
+                foreach (var entidade in lstPontos)
                 {
-                    foreach (var entidade in lstPontos)
+                    if (entidade.Camisas >= 1)
                     {
-                        if (entidade.Camisas >= 1)
-                        {
-                            <tr id="@entidade.Id_Cliente">
-                                <td>@entidade.Ds_Nome</td>
-                                <td>@entidade.DS_Pontos</td>
+                        <tr id="@entidade.Id_Cliente">
+                            <td>@entidade.Ds_Nome</td>
+                            <td>@entidade.DS_Pontos</td>
 
-                                <td>
-                                    <button class="btn btn-xs btn-success btnObter" title="Obter">Obter camisa</button>
-                                </td>
-                            </tr>
-                        }else
-                        {
-                            <tr id="@entidade.Id_Cliente">
-                                <td>@entidade.Ds_Nome</td>
-                                <td>@entidade.DS_Pontos</td>
-                                <td>
-                                    <button class="btn btn-xs btn-danger btnObter" title="Obter" disabled>Obter camisa</button>
-                                </td>
-                            </tr>
-                        }
-
-
+                            <td>
+                                <button class="btn btn-xs btn-success btnObter" title="Obter">Obter camisa</button>
+                            </td>
+                        </tr>
                     }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="3"> Nenhum Registro Encontrado</td>
-                    </tr>
+                    else
+                    {
+                        <tr id="@entidade.Id_Cliente">
+                            <td>@entidade.Ds_Nome</td>
+                            <td>@entidade.DS_Pontos</td>
+                            <td>
+                                <button class="btn btn-xs btn-danger btnObter" title="Obter" disabled>Obter camisa</button>
+                            </td>
+                        </tr>
+                    }
+
                 }
 
-
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3"> Nenhum Registro Encontrado</td>
+                </tr>
             }
         }
 

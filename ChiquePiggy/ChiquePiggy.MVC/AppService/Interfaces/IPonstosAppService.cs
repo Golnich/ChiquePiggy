@@ -9,9 +9,9 @@ namespace ChiquePiggy.MVC.AppService
 {
     public interface IPonstosAppService
     {
-        IReadOnlyList<PontosViewModel> ListarPontos();
-        void AtualizaPontos(PontosViewModel parametros);
+        IReadOnlyList<Pontos> ListarPontos();
+        void AtualizaPontos(Pontos parametros);
 
-        void DeletarPontos(PontosViewModel parametros);
+        void DeletarPontos(Pontos parametros);
     }
 }

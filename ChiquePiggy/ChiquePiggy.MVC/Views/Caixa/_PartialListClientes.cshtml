@@ -1,6 +1,6 @@
 ﻿@using ChiquePiggy.MVC.ViewModel;
 @{
-    var lstClientes = Model as List<ClienteViewModel>;
+    var lstClientes = Model as List<Cliente>;
 }
 
 <hr />
@@ -17,31 +17,24 @@
 
     <tbody>
         @{
-            if (lstClientes != null)
+            if (lstClientes != null || lstClientes.Count > 0)
             {
-                if (lstClientes.Count > 0)
+                foreach (var entidade in lstClientes)
                 {
-                    foreach (var entidade in lstClientes)
-                    {
-
-                        <tr id="@entidade.Id_Cliente">
-                            <td>@entidade.Cod_Cliente</td>
-                            <td>@entidade.Nome_Cliente</td>
-                            <td>
-                                <button class="btn btn-xs btn-danger btnDeletar" title="Deletar">Deletar</button>
-                            </td>
-
-                        </tr>
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="3"> Nenhum Registro Encontrado</td>
+                    <tr id="@entidade.Id_Cliente">
+                        <td>@entidade.Cod_Cliente</td>
+                        <td>@entidade.Nome_Cliente</td>
+                        <td>
+                            <button class="btn btn-xs btn-danger btnDeletar" title="Deletar">Deletar</button>
+                        </td>
                     </tr>
                 }
-
-
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3"> Nenhum Registro Encontrado</td>
+                </tr>
             }
         }
     </tbody>

@@ -56,16 +56,16 @@
         $(document).ready(function () {
             BuscarPontos();
         });
-
+         var URL = '@Url.Action("BuscarPontos", "Caixa")'
         function BuscarPontos() {
             debugger;
             $.ajax({
-                url: "../Caixa/BuscarPontos",
+                url: URL,
                 type: "POST",
                 success: function (dados) {
                     $("#divResult").html(dados)
                 }
-               
+
             });
         }
 
@@ -79,8 +79,9 @@
             if (model.Id_Cliente == "" || model.DS_ValorCompra == "" || model.Data_Compra == "") {
                 alert("Verifique se todos os campos foram preenchidos corretamente!")
             } else {
+                  var URL = '@Url.Action("CadastroVenda", "Caixa")'
                 $.ajax({
-                    url: "../Caixa/CadastroVenda",
+                    url: URL,
                     type: "POST",
                     data: model,
                     success: function (dados) {
@@ -89,7 +90,7 @@
                             $("#Id_Cliente").val('')
                             $("#DS_ValorCompra").val("")
                             $("#data").val("")
-                           
+
                         }
                         if (dados.Verifica == false || dados.isSucess == false) {
                             alert(dados.MensagemCallBack);

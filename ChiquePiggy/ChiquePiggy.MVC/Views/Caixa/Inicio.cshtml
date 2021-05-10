@@ -57,9 +57,9 @@
                 Cod_Cliente: $("#Cod_Cliente").val(),
                 Nome_Cliente: $("#Nome_Cliente").val()
             }
-
+            var URL = '@Url.Action("PesquisaClientes", "Caixa")'
             $.ajax({
-                url: "../Caixa/PesquisaClientes",
+                url: URL,
                 type: "POST",
                 data: model,
                 success: function (dados) {
@@ -71,6 +71,7 @@
         $("#btnCadastrar").click(function () {
             window.location.href = "../Caixa/CadastroClientes";
         })
+
     </script>
 }
 

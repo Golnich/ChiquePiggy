@@ -15,16 +15,16 @@ namespace ChiquePiggy.MVC.Controllers
     {
         #region Injeção de Dependencia
         private readonly ICaixaService _caixaService;
-        private readonly IClienteAppService _Cliente;
-        private readonly IVendasAppService _Vendas;
-        private readonly IPonstosAppService _Pontos;
+        private readonly IClienteAppService _clienteService;
+        private readonly IVendasAppService _vendasService;
+        private readonly IPonstosAppService _pontosService;
 
-        public CaixaController(ICaixaService caixaService, IClienteAppService Cliente, IVendasAppService Vendas, IPonstosAppService Pontos)
+        public CaixaController(ICaixaService caixaService, IClienteAppService clienteService, IVendasAppService vendasService, IPonstosAppService pontosService)
         {
             _caixaService = caixaService;
-            _Cliente = Cliente;
-            _Vendas = Vendas;
-            _Pontos = Pontos;
+            _clienteService = clienteService;
+            _vendasService = vendasService;
+            _pontosService = pontosService;
         }
         #endregion
 
@@ -43,8 +43,8 @@ namespace ChiquePiggy.MVC.Controllers
 
         public ActionResult Vendas()
         {
-            var lst = _Cliente.ListarClientes().Distinct().Select(l => new SelectListItem() { Text = Convert.ToString(l.Nome_Cliente), Value = Convert.ToString(l.Cod_Cliente) }).ToList();
-            ViewBag.Clientes = lst;
+            var clientes = _clienteService.ListarClientes().Distinct().Select(l => new SelectListItem() { Text = Convert.ToString(l.Nome_Cliente), Value = Convert.ToString(l.Cod_Cliente) }).ToList();
+            ViewBag.Clientes = clientes;
             return View();
         }
 
@@ -57,32 +57,30 @@ namespace ChiquePiggy.MVC.Controllers
         #region Pesquisas
         public ActionResult PesquisaClientes(ClienteViewModel dadosTela)
         {
-            var lst = _Cliente.ListarClientes().ToList();
+            var listaClientes = _clienteService.ListarClientes().ToList();
             if (dadosTela.Cod_Cliente > 0)
             {
-                lst = lst.Where(l => l.Cod_Cliente == dadosTela.Cod_Cliente).ToList();
+                listaClientes = listaClientes.Where(l => l.Cod_Cliente == dadosTela.Cod_Cliente).ToList();
             }
             if (!string.IsNullOrWhiteSpace(dadosTela.Nome_Cliente))
             {
-                lst = lst.Where(l => l.Nome_Cliente.Contains(dadosTela.Nome_Cliente)).ToList();
+                listaClientes = listaClientes.Where(l => l.Nome_Cliente.Contains(dadosTela.Nome_Cliente)).ToList();
             }
-            return PartialView("_PartialListClientes", lst);
+            return PartialView("_PartialListClientes", listaClientes);
         }
 
         public ActionResult BuscarPontos()
         {
             var lstTela = new List<VendasViewModel>();
-
-            var lstbanco = _Pontos.ListarPontos().ToList();
-            lstbanco.ForEach(l => {
+            var listapontos= _pontosService.ListarPontos().ToList();
+            listapontos.ForEach(l => {
                 var ObjetoVendas = new VendasViewModel();
                 ObjetoVendas.Id_Cliente = l.Id_Cliente;
                 ObjetoVendas.DS_Pontos = l.Total_Pontos;
                 ObjetoVendas.Camisas = l.Total_Pontos / 100;
-                ObjetoVendas.Ds_Nome = _Cliente.ListarClientes().FirstOrDefault(x => x.Cod_Cliente == l.Id_Cliente).Nome_Cliente;
+                ObjetoVendas.Ds_Nome = _clienteService.ListarClientes().FirstOrDefault(x => x.Cod_Cliente == l.Id_Cliente).Nome_Cliente;
                 lstTela.Add(ObjetoVendas);
             });
-
             return PartialView("_PartialListaPontos", lstTela);
         }
         #endregion
@@ -90,16 +88,13 @@ namespace ChiquePiggy.MVC.Controllers
         #region Cadastros
         public JsonResult CadastrarCliente(ClienteViewModel dadosTela)
         {
-            var isvalid = new ClienteValidation(_Cliente).Validate(dadosTela);
+            var entidade = new Cliente(dadosTela.Cod_Cliente, dadosTela.Nome_Cliente, 0, DateTime.Now, Environment.MachineName);
+            var isvalid = new ClienteValidation(_clienteService).Validate(entidade);
             if (isvalid.IsValid)
             {
-                dadosTela.Cod_Cliente = dadosTela.Cod_Cliente;
-                dadosTela.Horario = DateTime.Now;
-                dadosTela.Computador = Environment.MachineName;
-                dadosTela.Saldo = 0;
                 dadosTela.IsSucess = true;
                 dadosTela.MensagemCallBack = "Cliente cadastrado com sucesso !";
-                _Cliente.CadastrarClientes(dadosTela);
+                _clienteService.CadastrarClientes(entidade);
             }
             else
             {
@@ -111,40 +106,24 @@ namespace ChiquePiggy.MVC.Controllers
 
         public JsonResult CadastroVenda(VendasViewModel dadosTela)
         {
-            var isvalid = new VendasValidation().Validate(dadosTela);
+            var entidade = new Vendas(dadosTela.Id_Cliente, dadosTela.DS_ValorCompra, dadosTela.Data_Compra, DateTime.Now, Environment.MachineName);
+            var isvalid = new VendasValidation().Validate(entidade);
             if (isvalid.IsValid)
-            {
-                var Verifica = _Pontos.ListarPontos().FirstOrDefault(l => l.Id_Cliente == dadosTela.Id_Cliente);
+            {         
+                var verifica = _pontosService.ListarPontos().FirstOrDefault(l => l.Id_Cliente == dadosTela.Id_Cliente);
 
-                var DiaSemana = Convert.ToInt32(dadosTela.Data_Compra.DayOfWeek);
-                if (DiaSemana == 1 || DiaSemana == 2)
+                if (verifica != null)
                 {
-                    dadosTela.Valor_Compra = (float.Parse(dadosTela.DS_ValorCompra.Replace(".", ","))) * 2;
-                }
-                else
-                {
-                    dadosTela.Valor_Compra = float.Parse(dadosTela.DS_ValorCompra.Replace(".", ","));
-                }
-              
-
-                if (Verifica != null)
-                {       
-                    dadosTela.Verifica = true;
-                    dadosTela.DS_Pontos = Convert.ToInt32(Math.Round(dadosTela.Valor_Compra));
-                    dadosTela.Horario = DateTime.Now;
-                    dadosTela.Computador = Environment.MachineName;
+                    entidade.Verifica = true;         
                     dadosTela.MensagemCallBack = "Compra cadastrada com sucesso!";
                 }
                 else
-                {  
-                    dadosTela.Verifica = false;
-                    dadosTela.DS_Pontos = Convert.ToInt32(Math.Round(dadosTela.Valor_Compra));
-                    dadosTela.Horario = DateTime.Now;
-                    dadosTela.Computador = Environment.MachineName;
+                {
+                    entidade.Verifica = false;
                     dadosTela.MensagemCallBack = "Primeira compra do cliente !!";
                 }
                 dadosTela.isSucess = true;
-                _Vendas.CadastrarVendas(dadosTela);
+                _vendasService.CadastrarVendas(entidade);
             }
             else
             {
@@ -159,24 +138,24 @@ namespace ChiquePiggy.MVC.Controllers
         #region Deletar
         public JsonResult DeletarCliente(ClienteViewModel parametros)
         {
-            var V_Cliente = _Cliente.ListarClientes().FirstOrDefault(l => l.Id_Cliente == parametros.Id_Cliente);
-            var V_Lancamentos = _Vendas.ListarVendas().Where(l => l.Id_Cliente == V_Cliente.Cod_Cliente);
-            var V_Pontos = _Pontos.ListarPontos().Where(l => l.Id_Cliente == V_Cliente.Cod_Cliente);
-            if (V_Lancamentos.Count() > 0)
+            var v_Cliente = _clienteService.ListarClientes().FirstOrDefault(l => l.Id_Cliente == parametros.Id_Cliente);
+            var v_Lancamentos = _vendasService.ListarVendas().Where(l => l.Id_Cliente == v_Cliente.Cod_Cliente);
+            var v_Pontos = _pontosService.ListarPontos().Where(l => l.Id_Cliente == v_Cliente.Cod_Cliente);
+            if (v_Lancamentos.Count() > 0)
             {
-                foreach (var entidade in V_Lancamentos)
+                foreach (var entidade in v_Lancamentos)
                 {
-                    _Vendas.DeletarVendas(entidade);
+                    _vendasService.DeletarVendas(entidade);
                 }
             }
-            if (V_Pontos.Count() > 0)
+            if (v_Pontos.Count() > 0)
             {
-                foreach(var entidade in V_Pontos)
+                foreach(var entidade in v_Pontos)
                 {
-                    _Pontos.DeletarPontos(entidade);
+                    _pontosService.DeletarPontos(entidade);
                 }
             }
-            _Cliente.DeletarCliente(V_Cliente);
+            _clienteService.DeletarCliente(v_Cliente);
             return Json("", JsonRequestBehavior.AllowGet);
         }
         #endregion
@@ -184,9 +163,9 @@ namespace ChiquePiggy.MVC.Controllers
         #region Outros Metodos
         public JsonResult ObterPontos(VendasViewModel Parametros)
         {
-            var entidade = _Pontos.ListarPontos().FirstOrDefault(l => l.Id_Cliente == Parametros.Id_Cliente);
+            var entidade = _pontosService.ListarPontos().FirstOrDefault(l => l.Id_Cliente == Parametros.Id_Cliente);
             entidade.Total_Pontos = entidade.Total_Pontos - 100;
-            _Pontos.AtualizaPontos(entidade);
+            _pontosService.AtualizaPontos(entidade);
             return Json("", JsonRequestBehavior.AllowGet);
         }
         #endregion

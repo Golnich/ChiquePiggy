@@ -6,7 +6,7 @@ using System.Web;
 
 namespace ChiquePiggy.MVC.ViewModel
 {
-    public class VendasValidation : AbstractValidator<VendasViewModel>
+    public class VendasValidation : AbstractValidator<Vendas>
     {
 
         public VendasValidation()

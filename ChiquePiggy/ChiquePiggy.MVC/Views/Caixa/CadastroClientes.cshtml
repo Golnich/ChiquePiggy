@@ -53,12 +53,12 @@
             if (model.Id_Cliente == "" || model.Nome_Cliente == "") {
                 alert("Verifique se todos os campos foram preenchidos corretamente!")
             } else {
+                 var URL = '@Url.Action("CadastrarCliente", "Caixa")'
                 $.ajax({
-                    url: "../Caixa/CadastrarCliente",
+                    url: URL,
                     type: "POST",
                     data: model,
                     success: function (dados) {
-                        debugger;
                         if (dados.IsSucess == true) {
                             $("#Cod_Cliente").val("")
                             $("#Nome_Cliente").val("")

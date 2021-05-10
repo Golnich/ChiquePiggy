@@ -7,7 +7,7 @@ using System.Web;
 
 namespace ChiquePiggy.MVC
 {
-    public class Cliente_Mapping : EntityTypeConfiguration<ClienteViewModel>
+    public class Cliente_Mapping : EntityTypeConfiguration<Cliente>
     {
         public Cliente_Mapping()
         {

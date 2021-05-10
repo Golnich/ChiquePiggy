@@ -7,7 +7,7 @@ using System.Web;
 
 namespace ChiquePiggy.MVC
 {
-    public class Pontos_Mapping : EntityTypeConfiguration<PontosViewModel>
+    public class Pontos_Mapping : EntityTypeConfiguration<Pontos>
     {
         public Pontos_Mapping()
         {

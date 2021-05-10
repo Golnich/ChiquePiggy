@@ -171,9 +171,11 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\Cliente.cs" />
     <Compile Include="ViewModel\ClienteViewModel.cs" />
-    <Compile Include="ViewModel\PontosViewModel.cs" />
+    <Compile Include="ViewModel\Pontos.cs" />
     <Compile Include="ViewModel\Valid\VendasValidation.cs" />
+    <Compile Include="ViewModel\Vendas.cs" />
     <Compile Include="ViewModel\VendasViewModel.cs" />
     <Compile Include="ViewModel\Valid\ClienteValidation.cs" />
   </ItemGroup>

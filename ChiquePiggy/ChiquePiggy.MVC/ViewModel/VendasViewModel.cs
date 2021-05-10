@@ -13,12 +13,12 @@ namespace ChiquePiggy.MVC.ViewModel
         public DateTime Data_Compra { get; set; }
         public DateTime Horario { get; set; }
         public string Computador { get; set; }
-        public virtual int DS_Pontos { get; set; }
-        public virtual string MensagemCallBack { get; set; }
-        public virtual bool Verifica { get; set; }
-        public virtual bool isSucess { get; set; }
-        public virtual string DS_ValorCompra { get; set; }
-        public virtual string Ds_Nome { get; set; }
-        public virtual int Camisas { get; set; }
+        public int DS_Pontos { get; set; }
+        public string MensagemCallBack { get; set; }
+        public bool Verifica { get; set; }
+        public bool isSucess { get; set; }
+        public string DS_ValorCompra { get; set; }
+        public string Ds_Nome { get; set; }
+        public int Camisas { get; set; }
     }
 }
